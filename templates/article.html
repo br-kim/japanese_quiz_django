@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %} {% endblock %}
+{% block content %}
+<h1><a href="/fb">자유 게시판</a></h1>
+<br>
+<div id="wrap-freeboard-content">
+<div id="contain-article">
+<div>
+    <input class="article-button" id="article-edit-button" type="button" value="수정">
+    <input class="article-button" id="article-delete-button" type="button" value="삭제">
+</div>
+    <div id="show-article">
+        <div id="article-title"></div>
+        <div id="article-created"></div><br><br>
+        <div id="article-writer"></div><br>
+        <div id="article-content"></div>
+    </div>
+</div>
+    <br><br>
+
+<div id="contain-comments">
+    <div id="show-comments">
+    </div>
+</div>
+    <br><br><br>
+<div id="write-comment">
+    <br>
+    <label id="write-label">
+        <input type="text" size="100px" id="write-comment-input">
+        <input type="button" id="write-comment-submit" value="등록">
+        <input type="hidden" id="state-childcomment" value=true><br><br>
+    </label>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        document.getElementById("write-comment-submit").addEventListener('click',()=>{
+            articleFunction.sendComment();
+        });
+        document.getElementById('article-edit-button').addEventListener('click',articleFunction.loadEdit);
+        document.getElementById('article-delete-button').addEventListener('click',articleFunction.deleteArticle);
+        window.onload = articleFunction.loadArticle();
+        document.getElementById('show-comments').onload = articleFunction.loadComments();
+    </script>
+{% endblock %}

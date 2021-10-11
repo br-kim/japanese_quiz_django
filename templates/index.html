@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %} 메인 페이지{% endblock %}
+{% block content %}
+    <div id="main-title">
+        <h1>일본어 퀴즈</h1>
+    </div>
+    <br>
+    <div id="begin-inf">
+        <form action="/quiz">
+            <input type="submit" value="무한모드">
+        </form>
+    </div>
+    <div id="begin-full">
+        <form action="/newquiz">
+            <input type="submit" value="제한모드">
+            <label><input type="radio" name="kind" value="hiragana" > 히라가나 </label>
+            <label><input type="radio" name="kind" value="katakana" > 카타가나 </label>
+            <label><input type="radio" name="kind" value="all" checked> 모든문자 </label>
+        </form>
+    </div>
+{% endblock %}

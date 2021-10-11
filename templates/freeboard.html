@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %} 자유 게시판 {% endblock %}
+{% block content %}
+<h1>자유 게시판  <a href="/write"><button>글 쓰기</button></a></h1>
+<div id="contain-table">
+    <table id="result">
+        <thead>
+            <tr>
+                <th>제목</th><th>글쓴이</th><th>시간</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<div id="pages"></div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        window.onload = articleFunction.loadArticleList();
+    </script>
+{% endblock %}
