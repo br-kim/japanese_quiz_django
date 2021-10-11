@@ -4,6 +4,7 @@ from quiz import views
 
 
 urlpatterns = [
-    path('hello', views.hello),
-    path('user_register', views.user_register)
+    path('inf_quiz', views.inf_quiz),
+    path('lim_quiz', views.lim_quiz),
+    path('scoreboard', None),
 ]
