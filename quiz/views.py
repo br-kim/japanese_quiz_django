@@ -4,11 +4,9 @@ from django.http.response import HttpResponse
 from .models import User
 
 
-def hello(request):
-    user_list = User.objects.order_by('user_id')
-    return HttpResponse(user_list)
+def inf_quiz(request):
+    return render(request, "quiz.html")
 
 
-def user_register(request):
-    print(request.GET)
-    return HttpResponse(request.body)
+def lim_quiz(request):
+    return render(request, "new_quiz.html")
