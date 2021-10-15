@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %} 회원 가입{% endblock %}
+{% block content %}
+<div>
+<form action="" method="post">
+    {{ csrf_input }}
+    User ID : {{ form.user_id }} <br>
+    User Email : {{ form.user_email }} <br>
+    User Password : {{ form.user_password }} <br>
+    <input type="submit" value="submit">
+</form>
+</div>
+{% endblock %}
