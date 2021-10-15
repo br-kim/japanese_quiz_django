@@ -1,3 +1,32 @@
 from django.shortcuts import render
+from django.http.response import HttpResponseRedirect
 
-# Create your views here.
+from .form import UserRegistrationForm
+from .service import register_user
+from quiz.service import create_score
+
+
+def create_user_page(request):
+    if request.method == "GET":
+        user_registration_form = UserRegistrationForm()
+    else:
+        user_registration_form = UserRegistrationForm(request.POST)
+        if user_registration_form.is_valid():
+            register_user(user_id=user_registration_form.cleaned_data['user_id'],
+                          user_email=user_registration_form.cleaned_data['user_email'],
+                          user_password=user_registration_form.cleaned_data['user_password'])
+            create_score(user_registration_form.cleaned_data['user_id'])
+            return HttpResponseRedirect('/')
+
+    context = {
+        'form': user_registration_form
+    }
+    return render(request, "create_user_page.html", context)
+
+
+def delete_user():
+    return
+
+
+def edit_user():
+    return
