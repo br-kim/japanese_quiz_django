@@ -1,0 +1,38 @@
+#contain-answer{
+    pointer-events:none;
+}
+
+#quiz{
+    border: black solid;
+}
+
+#incorrect-sheet-table{
+    text-align: center;
+}
+
+#incorrect-sheet-table{
+    margin : auto;
+}
+
+.score-board{
+    height: auto;
+    border: black solid;
+    float:left;
+}
+
+.inner-score-board{
+    float:left;
+}
+
+#score-board-wrapper{
+    display: flex;
+    justify-content: center;
+    min-height: 50vh;
+}
+
+#contain-table{
+    border: black groove;
+    display: inline-block;
+    justify-content: center;
+    min-height: 50vh;
+}
