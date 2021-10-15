@@ -24,3 +24,9 @@ def update_score(kind, character, _user_id):
 
     else:
         raise ValueError
+
+
+def get_score(_user_id):
+    score = models.Score.objects.get(user_id=_user_id)
+    return {"hiragana_score": score.hiragana_score,
+            "katakana_score": score.katakana_score}
