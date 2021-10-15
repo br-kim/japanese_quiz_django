@@ -1,6 +1,8 @@
-import json
-
 from quiz import models
+
+
+def create_score(_user_id):
+    return models.Score.objects.create(user_id=_user_id)
 
 
 def update_score(kind, character, _user_id):
