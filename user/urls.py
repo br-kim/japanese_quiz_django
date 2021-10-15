@@ -10,4 +10,7 @@ urlpatterns = [
     path('login', auth_views.LoginView.as_view(template_name='login.html',
                                                template_engine='jinja2'), name='login'),
     path('logout', auth_views.LogoutView.as_view(), name='logout'),
+    path('profile', views.user_profile),
+    path('scoreboard', views.user_scoreboard),
+
 ]
