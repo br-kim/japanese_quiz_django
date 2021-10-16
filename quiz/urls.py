@@ -8,6 +8,5 @@ urlpatterns = [
     path('lim_quiz', views.lim_quiz),
     path('quiz_img', views.quiz_img),
     path('quiz_imgs', views.quiz_imgs),
-    path('score_update', views.score_update)
-    # path('scoreboard', lambda x: return None),
+    path('score_update', views.score_update),
 ]
