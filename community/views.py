@@ -1,3 +1,10 @@
 from django.shortcuts import render
+from django.http.response import HttpResponse
 
-# Create your views here.
+
+def main(request):
+    return render(request, "freeboard.html")
+
+
+def write(request):
+    return HttpResponse()
