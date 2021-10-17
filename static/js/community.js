@@ -19,7 +19,7 @@ let articleFunction = {
             alert('제목과 내용을 입력해주세요.');
             return;
         }
-        let res = await fetch('/freeboard/write/article',{
+        let res = await fetch('/community/write',{
             method:'POST',
             headers: {
                 'Content-Type':'application/json'
