@@ -5,5 +5,6 @@ from community import views
 
 urlpatterns = [
     path('', views.main),
-    path('', views.write),
+    path('write_page', views.write_page),
+    path('write', views.write)
 ]
