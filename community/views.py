@@ -20,3 +20,16 @@ def edit_page(request):
 
 def edit(request):
     return HttpResponse()
+
+
+def delete(request):
+    return HttpResponse()
+
+
+def get_article_page(request):
+    return HttpResponse
+
+
+def get_article(request):
+    return HttpResponse
+
