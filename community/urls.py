@@ -6,5 +6,7 @@ from community import views
 urlpatterns = [
     path('', views.main),
     path('write_page', views.write_page),
-    path('write', views.write)
+    path('write', views.write),
+    path('edit_page', views.edit_page),
+    path('edit', views.edit),
 ]
