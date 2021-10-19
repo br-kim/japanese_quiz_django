@@ -302,9 +302,9 @@ let articleFunction = {
         if (!pagenum){
             pagenum = 1;
         }
-        let url = new URL(location.origin + communityBaseUrl+ '?/pagenum='+pagenum);
+        let url = new URL(location.origin + communityBaseUrl+ '/article_page/'+pagenum);
         let data = {'page': pagenum};
-        url.search = new URLSearchParams(data).toString();
+        // url.search = new URLSearchParams(data).toString();
         let req = await fetch(url.toString());
         let res_json = await req.json();
         /** @param res_json
@@ -322,7 +322,7 @@ let articleFunction = {
             let writerCell = newRow.insertCell();
             let dateCell = newRow.insertCell();
             titleCell.innerHTML = `<a href="/article?pagenum=${elem.id}">${elem.title}</a>`;
-            writerCell.textContent = elem.writer;
+            writerCell.textContent = elem.user_id;
             dateCell.textContent = articleFunction.datePreProcess(elem.created_at);
         });
     },
