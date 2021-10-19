@@ -3,7 +3,15 @@ from django.core.paginator import Paginator
 from community import models
 
 
-def get_article_list():
+def create_article(writer, title, contents):
+    return
+
+
+def create_comment(writer, contents):
+    return
+
+
+def get_article_list(page_num):
     return
 
 
