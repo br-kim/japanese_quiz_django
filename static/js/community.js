@@ -1,4 +1,7 @@
+let communityBaseUrl = "/community";
+
 let articleFunction = {
+
     datePreProcess: (timeStamp) =>{
         let date = new Date(timeStamp);
         return date.toLocaleString("jpn", {dateStyle: 'medium', timeStyle: 'medium', hour12: false});
@@ -19,7 +22,7 @@ let articleFunction = {
             alert('제목과 내용을 입력해주세요.');
             return;
         }
-        let res = await fetch('/community/write',{
+        let res = await fetch(`${communityBaseUrl}/write`,{
             method:'POST',
             headers: {
                 'Content-Type':'application/json'
@@ -40,7 +43,7 @@ let articleFunction = {
             alert('제목과 내용을 입력해주세요.');
             return;
         }
-        await fetch(`/freeboard/edit/article/${articleId}`,{
+        await fetch(`${communityBaseUrl}/edit/article/${articleId}`,{
             method:'PATCH',
             headers: {
                 'Content-Type':'application/json'
@@ -59,14 +62,14 @@ let articleFunction = {
     },
 
     loadBeforeArticle : async ()=>{
-        let res = await fetch(location.origin+'/freeboard/'+articleFunction.getSearchParamPagenum());
+        let res = await fetch(location.origin+`${communityBaseUrl}/`+articleFunction.getSearchParamPagenum());
         let article = await res.json();
         document.getElementById('input-title').value = article.title;
         document.getElementById('input-content').value = article.contents;
     },
 
     loadArticle : async () => {
-        let res = await fetch(location.origin+'/freeboard/'+articleFunction.getSearchParamPagenum());
+        let res = await fetch(location.origin+`${communityBaseUrl}/`+articleFunction.getSearchParamPagenum());
         let article = await res.json();
         /** @param article
          *  @param article.title
@@ -200,7 +203,7 @@ let articleFunction = {
         }
     },
     loadComments : async () => {
-        let res = await fetch(location.origin+'/freeboard/'+articleFunction.getSearchParamPagenum()+'/comment');
+        let res = await fetch(location.origin+`${communityBaseUrl}/`+articleFunction.getSearchParamPagenum()+'/comment');
         let comments = await res.json();
         comments.forEach((comment)=>{
             if (!comment.parent_id){
@@ -233,7 +236,7 @@ let articleFunction = {
             alert('내용을 입력해주세요.');
             return;
         }
-        await fetch(`/freeboard/edit/comment/${commentId}`,{
+        await fetch(`${communityBaseUrl}/edit/comment/${commentId}`,{
             method:'PATCH',
             headers: {
                 'Content-Type':'application/json'
@@ -257,7 +260,7 @@ let articleFunction = {
             alert('내용을 입력해주세요.');
             return;
         }
-        await fetch('/freeboard/write/comment', {
+        await fetch(`${communityBaseUrl}/write/comment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -273,7 +276,7 @@ let articleFunction = {
             content_id: Number(articleFunction.getSearchParamPagenum()),
             content_writer: document.getElementById('article-writer')
         };
-        await fetch(`/freeboard/delete/article`,{
+        await fetch(`${communityBaseUrl}/delete/article`,{
             method:'DELETE',
             body: JSON.stringify(data)
         });
@@ -285,7 +288,7 @@ let articleFunction = {
             content_id: comment.id,
             content_writer: comment.writer
         };
-        await fetch('/freeboard/delete/comment',{
+        await fetch(`${communityBaseUrl}/comment`,{
             method:'DELETE',
             body: JSON.stringify(data)
         }).then(res=>{
@@ -299,7 +302,7 @@ let articleFunction = {
         if (!pagenum){
             pagenum = 1;
         }
-        let url = new URL(location.origin + '/freeboard'+ '?/pagenum='+pagenum);
+        let url = new URL(location.origin + communityBaseUrl+ '?/pagenum='+pagenum);
         let data = {'page': pagenum};
         url.search = new URLSearchParams(data).toString();
         let req = await fetch(url.toString());
