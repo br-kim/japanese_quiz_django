@@ -4,7 +4,8 @@ from community import models
 
 
 def create_article(writer, title, contents):
-    return models.Articles.objects.create(user_id=writer, title=title, contents=contents)
+    article = models.Articles.objects.create(user_id=writer, title=title, contents=contents)
+    return article.save()
 
 
 def create_comment(writer, contents):
