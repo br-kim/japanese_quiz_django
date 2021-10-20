@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from django.http.response import HttpResponse, JsonResponse
 
@@ -13,11 +15,15 @@ def write_page(request):
 
 
 def write(request):
-    if request.POST.get('type') == "article":
-        write_user_id = request.user
-        write_title = request.POST.get('title')
-        write_contents = request.POST.get('contents')
-        service.create_article(write_user_id, write_title, write_contents)
+    print(request.method)
+    print(request.POST)
+    if request.method == "POST":
+        article_dict = json.loads(request.body)
+        if article_dict.get('type') == "article":
+            write_user_id = request.user.username
+            write_title = article_dict.get('title')
+            write_contents = article_dict.get('contents')
+            service.create_article(write_user_id, write_title, write_contents)
     if request.POST.get('type') == "comment":
         pass
 
@@ -57,7 +63,8 @@ def get_article_page(request, page_num):
 
 def get_article(request, article_id):
     article = service.get_article(article_id)
-    return JsonResponse({
+    print(article.contents)
+    return JsonResponse(json_dumps_params={"ensure_ascii":False}, data={
         'title': article.title,
         'contents': article.contents,
         'writer': article.user_id,
