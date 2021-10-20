@@ -8,8 +8,9 @@ def create_article(writer, title, contents):
     return article.save()
 
 
-def create_comment(writer, contents):
-    return models.Comments.objects.create(user_id=writer, contents=contents)
+def create_comment(writer, contents, article_id):
+    comment = models.Comments.objects.create(user_id=writer, contents=contents, article_id=article_id)
+    return comment.save()
 
 
 def get_article_list(page_num):
@@ -41,3 +42,8 @@ def get_comment(article_id):
 def delete_comment(comment_id):
     return models.Comments.objects.filter(id=comment_id).delete()
 
+
+def edit_comment(comment_id, contents):
+    comment = models.Comments.objects.get(id=comment_id)
+    comment.contents = contents
+    return comment.save()
