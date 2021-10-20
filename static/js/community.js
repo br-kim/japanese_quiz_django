@@ -15,6 +15,7 @@ let articleFunction = {
 
     sendArticle : async function (){
         let data = {
+            type: "article",
             title: document.getElementById('input-title').value,
             contents: document.getElementById('input-content').value
         };
@@ -25,12 +26,13 @@ let articleFunction = {
         let res = await fetch(`${communityBaseUrl}/write`,{
             method:'POST',
             headers: {
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'X-CSRFToken': getCSRFToken(),
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         });
         let article_num = await res.text();
-        window.location.href = location.origin + '/article?pagenum='+article_num;
+        // window.location.href = location.origin + '/article/'+article_num;
     },
 
     editArticle : async function (){
