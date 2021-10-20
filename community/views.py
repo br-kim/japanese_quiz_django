@@ -15,17 +15,16 @@ def write_page(request):
 
 
 def write(request):
-    print(request.method)
-    print(request.POST)
     if request.method == "POST":
         article_dict = json.loads(request.body)
+        write_user_id = request.user.username
+        write_contents = article_dict.get('contents')
         if article_dict.get('type') == "article":
-            write_user_id = request.user.username
             write_title = article_dict.get('title')
-            write_contents = article_dict.get('contents')
             service.create_article(write_user_id, write_title, write_contents)
-    if request.POST.get('type') == "comment":
-        pass
+        elif article_dict.get('type') == "comment":
+            article_id = article_dict.get('article_id')
+            service.create_comment(write_user_id, write_contents,article_id)
 
     return HttpResponse(status=200)
 
@@ -35,12 +34,14 @@ def edit_page(request):
 
 
 def edit(request, content_id):
-    if request.POST.get('type') == "article":
-        edit_title = request.POST.get('title')
-        edit_contents = request.POST.get('contents')
-        service.edit_article(content_id, edit_title, edit_contents)
-    if request.POST.get('type') == "comment":
-        pass
+    if request.method == "POST":
+        comment_dict = json.loads(request.body)
+        edit_contents = comment_dict.get('contents')
+        if request.POST.get('type') == "article":
+            edit_title = comment_dict.get('title')
+            service.edit_article(content_id, edit_title, edit_contents)
+        if request.POST.get('type') == "comment":
+            service.edit_comment(content_id, edit_contents)
 
     return HttpResponse()
 
@@ -54,17 +55,18 @@ def delete(request, content_id):
 
 
 def get_article_page(request, page_num):
-    result = service.get_article_list(page_num)
-    print([i for i in result.values()])
+    articles = service.get_article_list(page_num)
+    article_list = [article for article in articles.values()]
+    print(article_list)
     return JsonResponse({
-        "articles": [i for i in result.values()]
+        "articles": article_list
     })
 
 
 def get_article(request, article_id):
     article = service.get_article(article_id)
     print(article.contents)
-    return JsonResponse(json_dumps_params={"ensure_ascii":False}, data={
+    return JsonResponse(json_dumps_params={"ensure_ascii": False}, data={
         'title': article.title,
         'contents': article.contents,
         'writer': article.user_id,
