@@ -18,3 +18,4 @@ class Comments(TimestampMixin, models.Model):
     user_id = models.CharField(max_length=20)
     contents = models.TextField()
     article_id = models.IntegerField()
+    parent_id = models.IntegerField(null=True)
