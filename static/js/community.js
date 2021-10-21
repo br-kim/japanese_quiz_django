@@ -2,7 +2,7 @@ let communityBaseUrl = "/community";
 
 let articleFunction = {
 
-    datePreProcess: (timeStamp) =>{
+    datePreProcess: (timeStamp) => {
         let date = new Date(timeStamp);
         return date.toLocaleString("jpn", {dateStyle: 'medium', timeStyle: 'medium', hour12: false});
     },
@@ -10,7 +10,12 @@ let articleFunction = {
     getSearchParamPagenum: () => {
         let urlSearchParams = new URLSearchParams(window.location.search);
         let result = Object.fromEntries(urlSearchParams.entries());
-        return result.pagenum;
+        if (!result.page_num) {
+            return result.article_id;
+        }
+        else{
+            return result.page_num;
+        }
     },
 
     sendArticle : async function (){
@@ -58,12 +63,12 @@ let articleFunction = {
         window.location.href = location.origin + '/article?pagenum='+articleId;
     },
 
-    loadEdit : async ()=>{
+    loadEdit : async () => {
         let articleId = articleFunction.getSearchParamPagenum();
         location.href = `/article/edit?pagenum=${articleId}`;
     },
 
-    loadBeforeArticle : async ()=>{
+    loadBeforeArticle : async () => {
         let res = await fetch(location.origin+`${communityBaseUrl}/`+articleFunction.getSearchParamPagenum());
         let article = await res.json();
         document.getElementById('input-title').value = article.title;
@@ -71,7 +76,7 @@ let articleFunction = {
     },
 
     loadArticle : async () => {
-        let res = await fetch(location.origin+`${communityBaseUrl}/`+articleFunction.getSearchParamPagenum());
+        let res = await fetch(location.origin+`${communityBaseUrl}/article/`+articleFunction.getSearchParamPagenum());
         let article = await res.json();
         /** @param article
          *  @param article.title
@@ -139,7 +144,7 @@ let articleFunction = {
         writerDiv.id = 'comment-writer';
         contentsDiv.id = 'comment-contents';
         createAtDiv.id = 'comment-created-at';
-        writerDiv.innerText += comment.writer;
+        writerDiv.innerText += comment.user_id;
         contentsDiv.innerText += comment.contents;
         createAtDiv.innerText += articleFunction.datePreProcess(comment.created_at);
 
@@ -178,6 +183,7 @@ let articleFunction = {
             await articleFunction.deleteComment(comment);
         }, false);
     },
+
     changeChildComment : (commentId) => {
         let state = document.getElementById("state-childcomment").value;
         let comment = document.querySelector(`[data-comment-id="${commentId}"]`);
@@ -204,9 +210,11 @@ let articleFunction = {
             });
         }
     },
+
     loadComments : async () => {
-        let res = await fetch(location.origin+`${communityBaseUrl}/`+articleFunction.getSearchParamPagenum()+'/comment');
+        let res = await fetch(location.origin+`${communityBaseUrl}/article/`+articleFunction.getSearchParamPagenum()+'/comment');
         let comments = await res.json();
+        comments = comments.comments
         comments.forEach((comment)=>{
             if (!comment.parent_id){
                 comment.parent_id = comment.id;
@@ -254,6 +262,7 @@ let articleFunction = {
     sendComment : async (parentId) => {
         let pagenum = articleFunction.getSearchParamPagenum();
         let data = {
+            type: "comment",
             contents: document.getElementById('write-comment-input').value,
             article_id: Number(pagenum),
             parent_id: parentId
@@ -262,15 +271,16 @@ let articleFunction = {
             alert('내용을 입력해주세요.');
             return;
         }
-        await fetch(`${communityBaseUrl}/write/comment`, {
+        await fetch(`${communityBaseUrl}/write`, {
             method: 'POST',
             headers: {
+                'X-CSRFToken': getCSRFToken(),
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         });
 
-        window.location.href = location.origin + '/article?pagenum='+pagenum;
+        window.location.href = location.origin + '/article_page?article_id='+pagenum;
     },
 
     deleteArticle: async () => {
@@ -299,14 +309,15 @@ let articleFunction = {
             }});
         window.location.reload();
     },
+
     loadArticleList : async () => {
-        let pagenum =  articleFunction.getSearchParamPagenum();
-        if (!pagenum){
-            pagenum = 1;
+        let page_num =  articleFunction.getSearchParamPagenum();
+        if (!page_num){
+            page_num = 1;
         }
-        let url = new URL(location.origin + communityBaseUrl+ '/article_page/'+pagenum);
-        let data = {'page': pagenum};
-        // url.search = new URLSearchParams(data).toString();
+        let url = new URL(location.origin + communityBaseUrl+ '/article_list/'+page_num);
+        let data = {'page': page_num};
+        url.search = new URLSearchParams(data).toString();
         let req = await fetch(url.toString());
         let res_json = await req.json();
         /** @param res_json
@@ -314,7 +325,7 @@ let articleFunction = {
          *  @param res_json.articles_length
          *  **/
         articleFunction.buildArticleHead(res_json.articles);
-        articleFunction.buildPageIndex(res_json.articles_length,pagenum);
+        articleFunction.buildPageIndex(res_json.articles_length,page_num);
     },
 
     buildArticleHead : (articleJsonArray) => {
@@ -323,7 +334,7 @@ let articleFunction = {
             let titleCell = newRow.insertCell();
             let writerCell = newRow.insertCell();
             let dateCell = newRow.insertCell();
-            titleCell.innerHTML = `<a href="/article?pagenum=${elem.id}">${elem.title}</a>`;
+            titleCell.innerHTML = `<a href="${communityBaseUrl}/article_page?article_id=${elem.id}">${elem.title}</a>`;
             writerCell.textContent = elem.user_id;
             dateCell.textContent = articleFunction.datePreProcess(elem.created_at);
         });
@@ -345,7 +356,8 @@ let articleFunction = {
         document.getElementById('pages').innerHTML ="";
         for(let i = begin; i < end; i++){
             document.getElementById('pages').innerHTML +=
-                `<a href='/fb?pagenum=${i}'>${i}</a> `;
+                `<a href='/community/main?page_num=${i}'>${i}</a> `;
         }
     }
+
 };
