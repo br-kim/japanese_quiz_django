@@ -8,14 +8,19 @@ def create_article(writer, title, contents):
     return article.save()
 
 
-def create_comment(writer, contents, article_id):
-    comment = models.Comments.objects.create(user_id=writer, contents=contents, article_id=article_id)
+def create_comment(writer, contents, article_id, parent_id):
+    comment = models.Comments.objects.create(
+        user_id=writer, contents=contents, article_id=article_id, parent_id=parent_id)
     return comment.save()
 
 
 def get_article_list(page_num):
     p = Paginator(models.Articles.objects.order_by("id").all(), 3)
     return p.page(page_num).object_list
+
+
+def get_articles_size():
+    return models.Articles.objects.order_by("id").all().count()
 
 
 def get_article(article_id):
@@ -35,7 +40,7 @@ def edit_article(article_id, title, contents):
     return article.save()
 
 
-def get_comment(article_id):
+def get_comments(article_id):
     return models.Comments.objects.filter(article_id=article_id)
 
 
