@@ -261,11 +261,11 @@ let articleFunction = {
     },
 
     sendComment : async (parentId) => {
-        let pagenum = articleFunction.getSearchParamPagenum();
+        let article_id = articleFunction.getSearchParamPagenum();
         let data = {
             type: "comment",
             contents: document.getElementById('write-comment-input').value,
-            article_id: Number(pagenum),
+            article_id: Number(article_id),
             parent_id: parentId
         };
         if (!data.article_id || !data.contents) {
@@ -281,7 +281,7 @@ let articleFunction = {
             body: JSON.stringify(data)
         });
 
-        window.location.href = location.origin + '/article_page?article_id='+pagenum;
+        window.location.href = location.origin +communityBaseUrl +'/article_page?article_id='+article_id;
     },
 
     deleteArticle: async () => {
