@@ -28,7 +28,9 @@ def write(request):
             parent_id = article_dict.get('parent_id')
             service.create_comment(write_user_id, write_contents, article_id, parent_id)
 
-    return HttpResponse(status=201)
+        return HttpResponse(status=201)
+    else:
+        return HttpResponse(status=405)
 
 
 def edit_page(request):
@@ -45,15 +47,25 @@ def edit(request, content_id):
         if request.POST.get('type') == "comment":
             service.edit_comment(content_id, edit_contents)
 
-    return HttpResponse()
+        return HttpResponse(status=204)
+    else:
+        return HttpResponse(status=405)
 
 
-def delete(request, content_id):
-    if request.POST.get('type') == "article":
-        service.delete_article(content_id)
-    if request.POST.get('type') == "comment":
-        service.delete_comment(content_id)
-    return HttpResponse()
+def delete(request):
+    body = json.loads(request.body)
+    content_id = body.get('content_id')
+    print(body.get('content_writer'), request.user.username)
+    if body.get('content_writer') == request.user.username:
+        if request.method == "DELETE":
+            if body.get('type') == "article":
+                service.delete_article(content_id)
+            if body.get('type') == "comment":
+                service.delete_comment(content_id)
+            return HttpResponse(status=204)
+        else:
+            return HttpResponse(status=405)
+    return HttpResponse(status=403)
 
 
 def get_article_list(request, page_num):
@@ -78,8 +90,6 @@ def get_article(request, article_id):
 
 def get_comments(request, article_id):
     comments = service.get_comments(article_id)
-    print(comments)
-    print(comments.values())
     return JsonResponse({"comments": [comment for comment in comments.values()]})
 
 
