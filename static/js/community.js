@@ -38,6 +38,7 @@ let articleFunction = {
         });
         let article_num = await res.text();
         // window.location.href = location.origin + '/article/'+article_num;
+        window.location.href = location.origin+communityBaseUrl+'/main';
     },
 
     editArticle : async function (){
@@ -285,11 +286,15 @@ let articleFunction = {
 
     deleteArticle: async () => {
         let data = {
+            type: 'article',
             content_id: Number(articleFunction.getSearchParamPagenum()),
-            content_writer: document.getElementById('article-writer')
+            content_writer: document.getElementById('article-writer').innerText
         };
-        await fetch(`${communityBaseUrl}/delete/article`,{
-            method:'DELETE',
+        await fetch(`${communityBaseUrl}/delete`,{
+            headers: {
+                "X-CSRFToken" : getCSRFToken(),
+            },
+            method: 'DELETE',
             body: JSON.stringify(data)
         });
         window.location.href = document.referrer;
@@ -297,11 +302,12 @@ let articleFunction = {
 
     deleteComment: async (comment) =>{
         let data = {
+            type: "comment",
             content_id: comment.id,
             content_writer: comment.writer
         };
-        await fetch(`${communityBaseUrl}/comment`,{
-            method:'DELETE',
+        await fetch(`${communityBaseUrl}/delete`,{
+            method: 'DELETE',
             body: JSON.stringify(data)
         }).then(res=>{
             if(res.status === 403){
@@ -325,7 +331,7 @@ let articleFunction = {
          *  @param res_json.articles_length
          *  **/
         articleFunction.buildArticleHead(res_json.articles);
-        articleFunction.buildPageIndex(res_json.articles_length,page_num);
+        articleFunction.buildPageIndex(res_json.articles_length, page_num);
     },
 
     buildArticleHead : (articleJsonArray) => {
@@ -354,7 +360,7 @@ let articleFunction = {
             end = totalPage;
         }
         document.getElementById('pages').innerHTML ="";
-        for(let i = begin; i < end; i++){
+        for(let i = begin; i < end+1; i++){
             document.getElementById('pages').innerHTML +=
                 `<a href='/community/main?page_num=${i}'>${i}</a> `;
         }
