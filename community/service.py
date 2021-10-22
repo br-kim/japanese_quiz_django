@@ -15,12 +15,12 @@ def create_comment(writer, contents, article_id, parent_id):
 
 
 def get_article_list(page_num):
-    p = Paginator(models.Articles.objects.order_by("id").all(), 3)
+    p = Paginator(models.Articles.objects.order_by("-id").all(), 3)
     return p.page(page_num).object_list
 
 
 def get_articles_size():
-    return models.Articles.objects.order_by("id").all().count()
+    return ((models.Articles.objects.all().count()) // 3) + 1
 
 
 def get_article(article_id):
