@@ -43,7 +43,7 @@ let btnFunction = {
             btnFunction.scoreAdd('correct');
             console.log(getCSRFToken());
             let req_data = {
-                character: document.getElementById("contain-answer").title,// document.getElementById('quiz').src,
+                character: document.getElementById("contain-answer").title,
                 kind: getGanaType(document.getElementById('quiz').src)
             };
             await fetch('/quiz/score_update',{
@@ -110,17 +110,14 @@ let btnFunction = {
         if (weighted.checked){
             url.searchParams.append('is_weighted', 'true');
         }
-        // console.log(url.toString())
         let new_url = await fetch(url.toString(),{
             method: 'GET',
         });
 
         let data = new_url.text();
         let json = JSON.parse(await data);
-        // console.log(json)
         let file_url = json.path;
-        // csrf_token = json.csrf_token;
-        // file_url = "../static/img/" + file_url
+
         document.getElementById('quiz').src = file_url;
         document.getElementById('contain-answer').title = urlToFileName(file_url);
         btnFunction.answerClear();
@@ -183,10 +180,8 @@ let btnFunction = {
     getNextImage : async function () {
         let arrayNum = 0;
         let res = await this.requestQuizData();
-        console.log(res)
         let chars = res.order;
 
-        // csrf_token = res.csrf_token;
         btnFunction.changeTitleSrc(chars,arrayNum);
         btnFunction.answerClear();
         return function () {
