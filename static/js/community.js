@@ -61,23 +61,24 @@ let articleFunction = {
             if(res.status === 403){
                 alert("다른 사람의 글은 수정할 수 없습니다.");
             }});
-        window.location.href = location.origin + '/article?pagenum='+articleId;
+        window.location.href = location.origin + `${communityBaseUrl}/article_page?article_id=`+articleId;
     },
 
     loadEdit : async () => {
         let articleId = articleFunction.getSearchParamPagenum();
-        location.href = `/article/edit?pagenum=${articleId}`;
+        location.href = `${communityBaseUrl}/edit_page?article_id=${articleId}`;
     },
 
     loadBeforeArticle : async () => {
-        let res = await fetch(location.origin+`${communityBaseUrl}/`+articleFunction.getSearchParamPagenum());
+        let res = await fetch(location.origin+`${communityBaseUrl}/article/`+articleFunction.getSearchParamPagenum());
         let article = await res.json();
         document.getElementById('input-title').value = article.title;
         document.getElementById('input-content').value = article.contents;
     },
 
     loadArticle : async () => {
-        let res = await fetch(location.origin+`${communityBaseUrl}/article/`+articleFunction.getSearchParamPagenum());
+        let res = await fetch(
+            location.origin+`${communityBaseUrl}/article/`+articleFunction.getSearchParamPagenum());
         let article = await res.json();
         /** @param article
          *  @param article.title
@@ -213,9 +214,10 @@ let articleFunction = {
     },
 
     loadComments : async () => {
-        let res = await fetch(location.origin+`${communityBaseUrl}/article/`+articleFunction.getSearchParamPagenum()+'/comment');
+        let res = await fetch(
+            location.origin+`${communityBaseUrl}/article/`+articleFunction.getSearchParamPagenum()+'/comment');
         let comments = await res.json();
-        comments = comments.comments
+        comments = comments.comments;
         comments.forEach((comment)=>{
             if (!comment.parent_id){
                 comment.parent_id = comment.id;
@@ -336,7 +338,8 @@ let articleFunction = {
 
     buildArticleHead : (articleJsonArray) => {
         articleJsonArray.forEach(elem => {
-            let newRow = document.getElementById('result').getElementsByTagName('tbody')[0].insertRow();
+            let newRow = document.getElementById('result')
+                .getElementsByTagName('tbody')[0].insertRow();
             let titleCell = newRow.insertCell();
             let writerCell = newRow.insertCell();
             let dateCell = newRow.insertCell();
@@ -362,7 +365,7 @@ let articleFunction = {
         document.getElementById('pages').innerHTML ="";
         for(let i = begin; i < end+1; i++){
             document.getElementById('pages').innerHTML +=
-                `<a href='/community/main?page_num=${i}'>${i}</a> `;
+                `<a href='${communityBaseUrl}/main?page_num=${i}'>${i}</a> `;
         }
     }
 
