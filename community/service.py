@@ -20,7 +20,7 @@ def get_article_list(page_num):
 
 
 def get_articles_size():
-    return ((models.Articles.objects.all().count()) // 3) + 1
+    return ((models.Articles.objects.all().count()-1) // 3)+1
 
 
 def get_article(article_id):
