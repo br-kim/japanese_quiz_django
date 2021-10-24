@@ -44,6 +44,7 @@ let articleFunction = {
     editArticle : async function (){
         let articleId = articleFunction.getSearchParamPagenum();
         let data = {
+            type:"article",
             title: document.getElementById('input-title').value,
             contents: document.getElementById('input-content').value
         };
@@ -51,10 +52,11 @@ let articleFunction = {
             alert('제목과 내용을 입력해주세요.');
             return;
         }
-        await fetch(`${communityBaseUrl}/edit/article/${articleId}`,{
+        await fetch(`${communityBaseUrl}/edit/${articleId}`,{
             method:'PATCH',
             headers: {
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'X-CSRFToken': getCSRFToken(),
             },
             body: JSON.stringify(data)
         }).then(res=>{
