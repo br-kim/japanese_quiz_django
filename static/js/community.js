@@ -242,6 +242,7 @@ let articleFunction = {
         let commentId = elem.id.split("-")[elem.id.split("-").length-1];
         console.log(elem.id.split("-"));
         let data = {
+            type:"comment",
             contents: elem.value,
             article_id: Number(pagenum)
         };
@@ -251,17 +252,18 @@ let articleFunction = {
             alert('내용을 입력해주세요.');
             return;
         }
-        await fetch(`${communityBaseUrl}/edit/comment/${commentId}`,{
+        await fetch(`${communityBaseUrl}/edit/${commentId}`,{
             method:'PATCH',
             headers: {
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'X-CSRFToken' : getCSRFToken(),
             },
             body: JSON.stringify(data)
         }).then(res=>{
             if(res.status === 403){
                 alert("다른 사람의 댓글은 수정할 수 없습니다.");
             }});
-        window.location.href = location.origin + '/article?pagenum='+pagenum;
+        window.location.href = location.origin +communityBaseUrl+'/article_page?article_id='+pagenum;
     },
 
     sendComment : async (parentId) => {
@@ -308,9 +310,12 @@ let articleFunction = {
         let data = {
             type: "comment",
             content_id: comment.id,
-            content_writer: comment.writer
+            content_writer: comment.user_id,
         };
         await fetch(`${communityBaseUrl}/delete`,{
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+            },
             method: 'DELETE',
             body: JSON.stringify(data)
         }).then(res=>{
@@ -358,8 +363,7 @@ let articleFunction = {
             begin = nowPage-2;
             if(begin < 1){
                 begin = 1;
-            }
-        }
+            }}
         let end = begin+5;
         if (end > totalPage){
             end = totalPage;
