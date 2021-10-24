@@ -41,7 +41,6 @@ let btnFunction = {
         if (answer === quiz) {
             alert("정답입니다!");
             btnFunction.scoreAdd('correct');
-            console.log(getCSRFToken());
             let req_data = {
                 character: document.getElementById("contain-answer").title,
                 kind: getGanaType(document.getElementById('quiz').src)
