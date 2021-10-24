@@ -43,13 +43,14 @@ def edit_page(request):
 
 @login_required()
 def edit(request, content_id):
-    if request.method == "POST":
+    if request.method == "PATCH":
         comment_dict = json.loads(request.body)
         edit_contents = comment_dict.get('contents')
-        if request.POST.get('type') == "article":
+        print(comment_dict)
+        if comment_dict.get('type') == "article":
             edit_title = comment_dict.get('title')
             service.edit_article(content_id, edit_title, edit_contents)
-        if request.POST.get('type') == "comment":
+        if comment_dict.get('type') == "comment":
             service.edit_comment(content_id, edit_contents)
 
         return HttpResponse(status=204)
@@ -78,8 +79,6 @@ def delete(request):
 def get_article_list(request, page_num):
     articles = service.get_article_list(page_num)
     article_list = [article for article in articles.values()]
-    # print(article_list)
-    print(service.get_articles_size())
     return JsonResponse({
         "articles_length": service.get_articles_size(),
         "articles": article_list,
