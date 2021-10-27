@@ -1,8 +1,10 @@
 let my_client_id = String(Date.now());
 document.querySelector("#ws-id").textContent = String(my_client_id);
 let websocketScheme = (document.location.protocol === 'http:') ? 'ws' : 'wss';
+
 let ws_send = new WebSocket(`${websocketScheme}://${document.location.host}/chatting/${my_client_id}/send`,);
 let ws_receive = new WebSocket(`${websocketScheme}://${document.location.host}/chatting/${my_client_id}/receive`,);
+
 ws_receive.onclose = function () {
     ws_receive.send("disconnected");
 };
@@ -24,6 +26,7 @@ ws_receive.onmessage = function (event) {
     if (data.type === 'keepalive'){
         return;
     }
+
     if (data.type === 'list'){
         data.message.forEach((elem)=>{
             let node = createUserName(elem);
@@ -31,13 +34,13 @@ ws_receive.onmessage = function (event) {
         });
         return;
     }
+
     if (data.type === 'whisper'){
         if (data.sender === my_client_id){
             messageHeader = document.createTextNode("to " + data.sender + " : ");
         }else{
             messageHeader = document.createTextNode("from " + data.sender + " : ");
         }
-
     }
 
     if (data.type === 'message'){
@@ -47,10 +50,12 @@ ws_receive.onmessage = function (event) {
             messageHeader = document.createTextNode(data.sender + " : ");
         }
     }
+
     if (data.type === 'alert') {
         processAlert(data);
         messageHeader = data.sender+" ";
     }
+
     message.append(messageHeader, content);
     messages.appendChild(message);
     document.querySelector("#messages-div").scrollTop =
