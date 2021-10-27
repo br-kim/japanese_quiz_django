@@ -23,5 +23,6 @@ urlpatterns = [
     path('quiz/', include('quiz.urls')),
     path('user/', include('user.urls')),
     path('community/', include('community.urls')),
+    path('chatting/', include('chatting.urls')),
     path('', views.main),
 ]
