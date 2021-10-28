@@ -2,8 +2,11 @@ let my_client_id = String(Date.now());
 document.querySelector("#ws-id").textContent = String(my_client_id);
 let websocketScheme = (document.location.protocol === 'http:') ? 'ws' : 'wss';
 
-let ws_send = new WebSocket(`${websocketScheme}://${document.location.host}/chatting/${my_client_id}/send`,);
-let ws_receive = new WebSocket(`${websocketScheme}://${document.location.host}/chatting/${my_client_id}/receive`,);
+// let ws_send = new WebSocket(`${websocketScheme}://${document.location.host}/chatting/${my_client_id}/send`,);
+// let ws_receive = new WebSocket(`${websocketScheme}://${document.location.host}/chatting/${my_client_id}/receive`,);
+let ws_send = new WebSocket(`${websocketScheme}://${document.location.host}/ws/chatting/room`);
+let ws_receive = ws_send
+
 
 ws_receive.onclose = function () {
     ws_receive.send("disconnected");
