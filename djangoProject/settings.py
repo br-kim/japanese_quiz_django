@@ -23,9 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('django-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.getenv('is_local'):
+    DEBUG = True
+    ALLOWED_HOSTS = []
+else:
+    DEBUG = False
+    ALLOWED_HOSTS = ["limitless-plateau-99008.herokuapp.com"]
 
-ALLOWED_HOSTS = []
+
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SECURE = True
 
 # Application definition
 
@@ -90,6 +98,7 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 # Channels
 
 ASGI_APPLICATION = 'djangoProject.asgi.application'
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
