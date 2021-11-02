@@ -41,7 +41,7 @@
         });
         document.getElementById('article-edit-button').addEventListener('click',articleFunction.loadEdit);
         document.getElementById('article-delete-button').addEventListener('click',articleFunction.deleteArticle);
-        window.onload = articleFunction.loadArticle();
-        document.getElementById('show-comments').onload = articleFunction.loadComments();
+        window.onload = articleFunction.loadArticle;
+        document.getElementById('show-comments').onload = articleFunction.loadComments(); //async 함수라서 호출 값을 넘겨줘야 하는 것으로 보임
     </script>
 {% endblock %}
