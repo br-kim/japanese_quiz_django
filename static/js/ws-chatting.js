@@ -66,6 +66,11 @@ ws_receive.onmessage = function (event) {
 };
 
 ws_send.onopen = ()=>{
+    ws_send.send(JSON.stringify(
+        {
+            user_id:my_client_id,
+        }
+    ));
     let a = function () {
         setTimeout(a,40000);
         ws_send.send(JSON.stringify({
