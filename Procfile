@@ -1,1 +1,1 @@
-web: gunicorn djangoProject.wsgi --settings=settings.settings_production
+web: gunicorn djangoProject.wsgi
