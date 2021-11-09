@@ -50,8 +50,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         connection.close()
 
     async def disconnect(self, code):
+        print("disconnected")
         user_id = self.scope.get('user').username
         connection = await self.get_connection
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': "chat_message",
+                'message': {'type': 'alert', 'detail': 'leave', 'sender': user_id,
+                            'message': "leave the chatting room."}
+            }
+        )
         await connection.srem('users_set', user_id)
         await self.channel_layer.group_discard(
             self.room_group_name,
