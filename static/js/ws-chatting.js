@@ -1,12 +1,16 @@
 let my_client_id = String(Date.now());
-document.querySelector("#ws-id").textContent = String(my_client_id);
+
 let websocketScheme = (document.location.protocol === 'http:') ? 'ws' : 'wss';
 
-// let ws_send = new WebSocket(`${websocketScheme}://${document.location.host}/chatting/${my_client_id}/send`,);
-// let ws_receive = new WebSocket(`${websocketScheme}://${document.location.host}/chatting/${my_client_id}/receive`,);
 let ws_send = new WebSocket(`${websocketScheme}://${document.location.host}/ws/chatting/room`);
-let ws_receive = ws_send
+let ws_receive = ws_send;
 
+function addUserList(node){
+    if (!document.getElementById(node.id)) {
+        console.log(document.getElementById(node.id));
+        document.getElementById('chatting-users-div').append(node);
+    }
+}
 
 ws_receive.onclose = function () {
     ws_receive.send("disconnected");
@@ -30,10 +34,16 @@ ws_receive.onmessage = function (event) {
         return;
     }
 
+    if (data.type === 'user_id') {
+        my_client_id = data.message;
+        document.querySelector("#ws-id").textContent = String(my_client_id);
+        return;
+    }
+
     if (data.type === 'list'){
         data.message.forEach((elem)=>{
             let node = createUserName(elem);
-            document.getElementById('chatting-users-div').append(node);
+            addUserList(node);
         });
         return;
     }
@@ -66,11 +76,6 @@ ws_receive.onmessage = function (event) {
 };
 
 ws_send.onopen = ()=>{
-    ws_send.send(JSON.stringify(
-        {
-            user_id:my_client_id,
-        }
-    ));
     let a = function () {
         setTimeout(a,40000);
         ws_send.send(JSON.stringify({
@@ -96,9 +101,7 @@ function createUserName(client_id){
 function processAlert(data){
     if (data.detail === 'enter'){
         let node = createUserName(data.sender);
-        if (!document.getElementById(node.id)) {
-            document.getElementById('chatting-users-div').append(node);
-        }
+        addUserList(node);
     }
     else if(data.detail ==='leave'){
         if(document.getElementById(data.sender)) {
