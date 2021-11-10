@@ -13,6 +13,8 @@ import os
 
 from pathlib import Path
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -100,7 +102,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(os.getenv('REDIS_DJANGO'))],
+            "hosts": [(os.getenv('REDIS_URL'))],
         }
     }
 }
@@ -109,14 +111,15 @@ CHANNEL_LAYERS = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django_test',
-        'PASSWORD': '1234',
-        'USER': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
+    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'django_test',
+    #     'PASSWORD': '1234',
+    #     'USER': 'postgres',
+    #     'HOST': 'localhost',
+    #     'PORT': '',
+    # }
 }
 
 # Password validation
