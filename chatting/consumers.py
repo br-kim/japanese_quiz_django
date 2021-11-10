@@ -17,7 +17,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_group_name = 'chat_room'
         user_id = self.scope.get('user').username
         connection = await self.get_connection
-        print(user_id.encode(), await connection.lrange('users_list', 0, -1))
+
         if user_id.encode() in await connection.lrange('users_list', 0, -1):
             await self.disconnect(None)
             await self.connect()
@@ -27,11 +27,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-        print("connected")
 
         await connection.lpush('users_list', user_id)
         result = await connection.lrange('users_list', 0, -1)
-        print(result)
 
         await self.accept()
         await self.channel_layer.group_send(
@@ -57,7 +55,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         connection.close()
 
     async def disconnect(self, code):
-        print("disconnected")
         user_id = self.scope.get('user').username
         connection = await self.get_connection
         await self.channel_layer.group_send(
