@@ -112,14 +112,6 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'django_test',
-    #     'PASSWORD': '1234',
-    #     'USER': 'postgres',
-    #     'HOST': 'localhost',
-    #     'PORT': '',
-    # }
 }
 
 # Password validation
