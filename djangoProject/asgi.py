@@ -15,7 +15,7 @@ from django.core.asgi import get_asgi_application
 
 import chatting.routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangoProject.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.settings_production')
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
