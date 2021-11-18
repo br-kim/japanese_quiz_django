@@ -6,18 +6,20 @@ from django.contrib.auth.decorators import login_required
 
 from community import service
 
+ERROR_PAGE = "/user/need_login"
 
-@login_required()
+
+@login_required(login_url=ERROR_PAGE)
 def main(request):
     return render(request, "freeboard.html")
 
 
-@login_required()
+@login_required(login_url=ERROR_PAGE)
 def write_page(request):
     return render(request, "write_article.html")
 
 
-@login_required()
+@login_required(login_url=ERROR_PAGE)
 def write(request):
     if request.method == "POST":
         article_dict = json.loads(request.body)
@@ -36,12 +38,12 @@ def write(request):
         return HttpResponse(status=405)
 
 
-@login_required()
+@login_required(login_url=ERROR_PAGE)
 def edit_page(request):
     return render(request, "edit_article.html")
 
 
-@login_required()
+@login_required(login_url=ERROR_PAGE)
 def edit(request, content_id):
     if request.method == "PATCH":
         comment_dict = json.loads(request.body)
@@ -58,7 +60,7 @@ def edit(request, content_id):
         return HttpResponse(status=405)
 
 
-@login_required()
+@login_required(login_url=ERROR_PAGE)
 def delete(request):
     body = json.loads(request.body)
     content_id = body.get('content_id')
@@ -75,7 +77,7 @@ def delete(request):
     return HttpResponse(status=403)
 
 
-@login_required()
+@login_required(login_url=ERROR_PAGE)
 def get_article_list(request, page_num):
     articles = service.get_article_list(page_num)
     article_list = [article for article in articles.values()]
@@ -85,7 +87,7 @@ def get_article_list(request, page_num):
     })
 
 
-@login_required()
+@login_required(login_url=ERROR_PAGE)
 def get_article(request, article_id):
     article = service.get_article(article_id)
     return JsonResponse(json_dumps_params={"ensure_ascii": False}, data={
@@ -95,12 +97,12 @@ def get_article(request, article_id):
         'created_at': article.created_at})
 
 
-@login_required()
+@login_required(login_url=ERROR_PAGE)
 def get_comments(request, article_id):
     comments = service.get_comments(article_id)
     return JsonResponse({"comments": [comment for comment in comments.values()]})
 
 
-@login_required()
+@login_required(login_url=ERROR_PAGE)
 def article_page(request):
     return render(request, "article.html")

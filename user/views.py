@@ -41,3 +41,7 @@ def user_scoreboard(request):
     return render(request, "scoreboard.html",
                   context={"hiragana_score": score.get('hiragana_score'),
                            "katakana_score": score.get('katakana_score')})
+
+
+def need_login(request):
+    return render(request, "error.html", context={"message": "로그인이 필요합니다."})
