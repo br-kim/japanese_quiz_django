@@ -29,7 +29,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         await connection.lpush('users_list', user_id)
-        result = await connection.lrange('users_list', 0, -1)
+        users_list = await connection.lrange('users_list', 0, -1)
 
         await self.accept()
         await self.channel_layer.group_send(
@@ -38,7 +38,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'type': "chat_message",
                 'message': {
                     'type': 'list',
-                    'message': [i.decode() for i in result],
+                    'message': [user_bytes.decode() for user_bytes in users_list],
                 },
             }
         )
@@ -87,4 +87,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def chat_message(self, event):
         message = event.get("message")
-        await self.send(text_data=json.dumps(message))
+        receiver = message.get('receiver')
+        username = self.scope.get('user').username
+        sender = message.get('sender')
+        if receiver:
+            if receiver == username or sender == username:
+                await self.send(text_data=json.dumps(message))
+        else:
+            await self.send(text_data=json.dumps(message))
