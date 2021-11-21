@@ -116,9 +116,17 @@ function processAlert(data){
 function sendMessage(event) {
     let input = document.getElementById("messageText");
     let target = document.getElementById("sendTo");
+    let messageType;
+    console.log(target.value)
+    if (target.value){
+        messageType = "whisper";
+    }
+    else{
+        messageType = "message";
+    }
     ws_send.send(
         JSON.stringify({
-            type: "message",
+            type: messageType,
             sender: my_client_id,
             message: input.value,
             receiver: target.value
