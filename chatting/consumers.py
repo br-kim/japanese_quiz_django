@@ -16,6 +16,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_group_name = 'chat_room'
         user_id = self.scope.get('user').username
+        if not user_id:
+            return
+
         connection = await self.get_connection
 
         if user_id.encode() in await connection.lrange('users_list', 0, -1):
