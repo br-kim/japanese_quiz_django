@@ -13,6 +13,7 @@ function addUserList(node){
 }
 
 ws_receive.onclose = function () {
+    alert("연결이 종료되었습니다.");
     ws_receive.send("disconnected");
 };
 
