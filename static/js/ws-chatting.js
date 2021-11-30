@@ -2,8 +2,7 @@ let my_client_id = String(Date.now());
 
 let websocketScheme = (document.location.protocol === 'http:') ? 'ws' : 'wss';
 
-let ws_send = new WebSocket(`${websocketScheme}://${document.location.host}/ws/chatting/room`);
-let ws_receive = ws_send;
+let ws_connection = new WebSocket(`${websocketScheme}://${document.location.host}/ws/chatting/room`);
 
 function addUserList(node){
     if (!document.getElementById(node.id)) {
@@ -12,12 +11,11 @@ function addUserList(node){
     }
 }
 
-ws_receive.onclose = function () {
+ws_connection.onclose = function () {
     alert("연결이 종료되었습니다.");
-    ws_receive.send("disconnected");
 };
 
-ws_receive.onmessage = function (event) {
+ws_connection.onmessage = function (event) {
     let messages = document.getElementById('messages');
     let message = document.createElement('li');
     let data = JSON.parse(event.data);
@@ -76,10 +74,10 @@ ws_receive.onmessage = function (event) {
         document.querySelector("#messages-div").scrollHeight;
 };
 
-ws_send.onopen = ()=>{
+ws_connection.onopen = ()=>{
     let a = function () {
         setTimeout(a,40000);
-        ws_send.send(JSON.stringify({
+        ws_connection.send(JSON.stringify({
             keepalive: true
         }));
     };
@@ -109,7 +107,7 @@ function processAlert(data){
             document.getElementById(data.sender).remove();
         }
         if(data.sender === my_client_id){
-            ws_receive.close();
+            ws_connection.close();
         }
     }
 }
@@ -118,14 +116,14 @@ function sendMessage(event) {
     let input = document.getElementById("messageText");
     let target = document.getElementById("sendTo");
     let messageType;
-    console.log(target.value)
+
     if (target.value){
         messageType = "whisper";
     }
     else{
         messageType = "message";
     }
-    ws_send.send(
+    ws_connection.send(
         JSON.stringify({
             type: messageType,
             sender: my_client_id,
